@@ -66,14 +66,14 @@
     /* NAV */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 0.75rem 2rem;
-      display: flex; flex-direction: column; align-items: center; gap: 0.35rem;
+      padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: center;
       transition: all 0.4s ease;
     }
     nav.scrolled {
       background: rgba(44,24,16,0.95);
       backdrop-filter: blur(12px);
-      padding: 0.6rem 2rem;
+      padding: 0.85rem 2rem;
       box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
     .nav-logo {
@@ -83,11 +83,63 @@
       line-height: 1;
     }
     nav.scrolled .nav-logo { color: var(--gold-light); }
-    .nav-links { display: flex; gap: 1.75rem; list-style: none; }
-    .nav-links a { font-size: 0.78rem; font-weight: 500; color: var(--brown-deep); text-decoration: none; letter-spacing: 0.05em; transition: color 0.3s; }
-    nav.scrolled .nav-links a { color: rgba(255,248,238,0.8); }
-    nav.scrolled .nav-links a:hover, .nav-links a:hover { color: var(--gold-light); }
-    @media (max-width: 640px) { .nav-links { display: none; } }
+    
+    .nav-toggle {
+      position: absolute; left: 2rem; top: 50%; transform: translateY(-50%);
+      width: 32px; height: 28px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      cursor: pointer; z-index: 101;
+    }
+    .nav-toggle span {
+      display: block; width: 100%; height: 3px;
+      background: var(--brown-deep);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    nav.scrolled .nav-toggle span { background: var(--gold-light); }
+    .nav-toggle.active span:nth-child(1) { transform: translateY(12.5px) rotate(45deg); }
+    .nav-toggle.active span:nth-child(2) { opacity: 0; }
+    .nav-toggle.active span:nth-child(3) { transform: translateY(-12.5px) rotate(-45deg); }
+    
+    .nav-links {
+      position: fixed; top: 0; left: 0;
+      width: 280px; height: 100vh;
+      background: rgba(44,24,16,0.98);
+      backdrop-filter: blur(16px);
+      display: flex; flex-direction: column;
+      gap: 0; list-style: none;
+      padding: 6rem 0 2rem 0;
+      transform: translateX(-100%);
+      transition: transform 0.4s ease;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+    }
+    .nav-links.active { transform: translateX(0); }
+    .nav-links li {
+      border-bottom: 1px solid rgba(255,248,238,0.1);
+    }
+    .nav-links a {
+      display: block;
+      padding: 1.2rem 2rem;
+      font-size: 0.95rem; font-weight: 500;
+      color: rgba(255,248,238,0.9);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+    }
+    .nav-links a:hover {
+      background: rgba(200,134,10,0.15);
+      color: var(--gold-light);
+      padding-left: 2.5rem;
+    }
+    
+    .nav-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      opacity: 0; visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 99;
+    }
+    .nav-overlay.active { opacity: 1; visibility: visible; }
 
     /* HERO */
     .hero {
@@ -276,21 +328,27 @@
 
 <!-- NAV -->
 <nav id="navbar">
+  <div class="nav-toggle" id="navToggle">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
   <a class="nav-logo" href="#home">🍯 Mel &amp; Própolis</a>
-  <ul class="nav-links">
+  <ul class="nav-links" id="navLinks">
     <li><a href="#produtos">Produtos</a></li>
     <li><a href="#propolis">Própolis</a></li>
     <li><a href="#sobre">Sobre</a></li>
     <li><a href="#localizacao">Localização</a></li>
   </ul>
 </nav>
+<div class="nav-overlay" id="navOverlay"></div>
 
 <!-- HERO -->
 <section class="hero" id="home">
   <div class="hero-badge"><span>📍</span><span>Barretos · São Paulo</span></div>
   <h1 class="hero-title">Mel <em>&amp;</em><br>Própolis</h1>
   <p class="hero-sub">Puro do campo à sua mesa</p>
-  <p class="hero-location">TENDA DO MEL, PRÓPOLIS, PÃO CASEIRO • Av. 55 Esq. Rua 48 · Bairro Marília · Barretos — SP</p>
+  <p class="hero-location">Av. 55 · Bairro Marília · Barretos — SP</p>
   <div class="hero-ctas">
     <a href="#produtos" class="btn-primary">Ver Produtos</a>
     <a href="https://maps.app.goo.gl/cskcNHtXS2asuwQP8" target="_blank" rel="noopener" class="btn-secondary">📍 Como Chegar</a>
@@ -321,7 +379,7 @@
 
       <article class="product-card reveal" itemscope itemtype="https://schema.org/Product">
         <div class="product-img-wrap">
-          <img src="https://raw.githubusercontent.com/engenheirosdigitais-lab/tenda-do-mel/refs/heads/main/mel-florada-silvestre-1kg-barretos.png"
+          <img src="https://raw.githubusercontent.com/engenheirosdigitais-lab/tenda-do-mel/refs/heads/main/mel-florada-silvestre-1kg-barretos-1.png"
                alt="Mel Florada Silvestre 1kg – Mel e Própolis Barretos SP"
                title="Mel Puro Florada Silvestre 1kg – Barretos"
                itemprop="image" loading="eager">
@@ -337,7 +395,7 @@
 
       <article class="product-card reveal" itemscope itemtype="https://schema.org/Product">
         <div class="product-img-wrap">
-          <img src="https://raw.githubusercontent.com/engenheirosdigitais-lab/tenda-do-mel/refs/heads/main/mel-florada-silvestre-280g-barretos.png"
+          <img src="refs/heads/main/mel-florada-silvestre-280g-barretos.png"
                alt="Mel Florada Silvestre 280g – Mel e Própolis Barretos SP"
                title="Mel Artesanal 280g – Barretos"
                itemprop="image" loading="lazy">
@@ -353,7 +411,7 @@
 
       <article class="product-card reveal" itemscope itemtype="https://schema.org/Product">
         <div class="product-img-wrap">
-          <img src="https://raw.githubusercontent.com/engenheirosdigitais-lab/tenda-do-mel/refs/heads/main/mel-puro-artesanal-barretos-sp.png"
+          <img src="mel-puro-artesanal-barretos-sp.png"
                alt="Mel puro artesanal em pote de vidro – Mel e Própolis Barretos SP"
                title="Mel Natural Artesanal em Pote – Barretos"
                itemprop="image" loading="lazy">
@@ -376,7 +434,7 @@
   <div class="section-inner">
     <div class="propolis-grid">
       <div class="propolis-img-container reveal">
-        <img src="https://raw.githubusercontent.com/engenheirosdigitais-lab/tenda-do-mel/refs/heads/main/propolis-barretos-sp-casa-do-mel.jpg"
+        <img src="propolis-barretos-sp-casa-do-mel.jpg"
              alt="Própolis líquido em frasco gotejador – Mel e Própolis Barretos SP"
              title="Própolis Natural – Barretos SP"
              loading="lazy">
@@ -500,11 +558,38 @@
 </footer>
 
 <script>
+  // Navbar scroll effect
   const navbar = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 60);
   });
 
+  // Hamburger menu toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  const navOverlay = document.getElementById('navOverlay');
+
+  function toggleMenu() {
+    navToggle.classList.toggle('active');
+    navLinks.classList.toggle('active');
+    navOverlay.classList.toggle('active');
+  }
+
+  function closeMenu() {
+    navToggle.classList.remove('active');
+    navLinks.classList.remove('active');
+    navOverlay.classList.remove('active');
+  }
+
+  navToggle.addEventListener('click', toggleMenu);
+  navOverlay.addEventListener('click', closeMenu);
+
+  // Close menu when clicking any nav link
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Reveal on scroll
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
@@ -516,6 +601,7 @@
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
   reveals.forEach(el => observer.observe(el));
 
+  // Smooth anchor scroll
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       e.preventDefault();
